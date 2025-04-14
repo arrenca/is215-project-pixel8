@@ -1,6 +1,6 @@
 # Note: We need to use Python for the Lambda runtime
 # I confirmed this is working when I tried it on my own AWS account
-# This creates a JSON file as the output but can we tweaked if no output file is required
+# This creates a JSON file as the output but can be tweaked if no output file is required
 
 import boto3
 import json
