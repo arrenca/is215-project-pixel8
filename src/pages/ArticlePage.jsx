@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Header from "../components/Header"
+import Footer from "../components/Footer"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons"
 
@@ -80,6 +81,7 @@ export default function ArticlePage() {
             Download
           </button>
         </div>
+        
       </div>
 
       {/* Footer with Dark Background Overlay */}
@@ -116,9 +118,15 @@ export default function ArticlePage() {
               {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
               {fileName && <p className="text-white mt-2">Selected file: {fileName}</p>}
             </label>
+
           </div>
-        </div>
+          
+          <Footer />
+      </div>
+          
       </footer>
-    </div>
+      
+  </div>
+  
   )
 }
