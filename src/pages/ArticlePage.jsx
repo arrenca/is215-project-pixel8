@@ -121,11 +121,11 @@ export default function ArticlePage() {
 
           </div>
           
-          <Footer />
+          
       </div>
           
       </footer>
-      
+      <Footer />
   </div>
   
   )

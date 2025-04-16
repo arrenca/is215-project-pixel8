@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export default function LandingPage() {
   const [file, setFile] = useState(null);
@@ -116,6 +117,7 @@ export default function LandingPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
