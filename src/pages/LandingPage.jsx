@@ -42,15 +42,22 @@ export default function LandingPage() {
           if (prevProgress >= 100) {
             clearInterval(interval);
             setTimeout(() => {
-              navigate("/article-page");
-            }, 500); // wait half a second before redirect
+              setIsLoading(false);
+              setProgress(0);
+              navigate("/article-page", {
+                state: {
+                  imageUrl: URL.createObjectURL(file),
+                  fromUpload: true,
+                },
+              });
+            }, 500);
             return 100;
           }
-          return prevProgress + 5; // Speed of progress
+          return prevProgress + 5;
         });
-      }, 150); // Interval timing
+      }, 150);
     }
-  }, [isLoading, navigate]);
+  }, [isLoading, navigate, file]);
 
   const getProgressText = () => {
     if (progress < 50) return "Loading...";
@@ -59,12 +66,11 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="landing-container min-h-screen font-inter">
+    <div className="landing-container h-screen overflow-hidden font-inter">
       <Header />
 
-      {/* Fullscreen Loader Overlay */}
       {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col items-center justify-center transition-all duration-300 ease-in-out">
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col items-center justify-center">
           <div className="w-2/3 max-w-xl px-4">
             <div className="bg-white rounded-full h-4 w-full mb-4 overflow-hidden shadow-lg">
               <div
@@ -72,45 +78,46 @@ export default function LandingPage() {
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-            <p className="text-white text-xl font-semibold text-center animate-pulse tracking-wide">
+            <p className="text-white text-xl font-semibold text-center animate-pulse">
               {getProgressText()}
             </p>
           </div>
         </div>
       )}
 
-      {/* Background Section */}
       <div
-        className="relative bg-gray-100 py-8 mt-10 bg-cover bg-center"
+        className="relative h-[calc(100vh-88px)] bg-gray-100 bg-cover bg-center mt-2.5"
         style={{ backgroundImage: "url('/images/background-landing_1.png')" }}
       >
-        {/* Dark overlay */}
         <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
 
-        {/* Content */}
-        <div className="relative z-10 ml-16 pl-6 p-4 rounded-md">
-          <h1 className="text-5xl font-bold text-white mb-4 font-inter tracking-wide leading-tight">
-            Unlock the story in every pixel.
-          </h1>
-          <p className="text-3xl text-white mb-6 font-inter">
-            Upload a photo and let AI uncover the story behind it — one pixel at a time.<br />
-            Drop your image here or click to upload.
-          </p>
+        <div className="relative z-10 ml-16 pl-6 p-4 rounded-md h-full flex flex-col justify-between">
+          <div className="mt-[50px]">
+            <h1 className="text-[70px] font-[700] leading-[100%] tracking-[-0.02em] text-white mb-4 font-inconsolata">
+              Unlock the story in every pixel.
+            </h1>
+            <p className="text-3xl text-white mb-4">
+              Upload a photo and let AI uncover the story behind it — one pixel at a time.
+            </p>
+            <p className="text-3xl text-white mb-6 -mt-4">
+              Drop your image here or click to upload.
+            </p>
+          </div>
 
-          <div className="upload-file flex justify-start">
-            <label className="bg-[#113f67cc] border-2 border-dashed border-white text-white rounded-lg p-6 max-w-md w-full">
+          <div className="upload-file flex justify-start w-full mb-16">
+            <label className="relative bg-[#113f67cc] border-2 border-dashed border-white text-white rounded-lg p-6 max-w-2xl w-full cursor-pointer">
               <p className="text-2xl font-semibold mb-2">
                 Drop your image here or click to upload.
               </p>
-              <p className="text-base">
-                Format: jpg, jpeg, png • Max file size: 10 MB
-              </p>
+              <p className="text-base">Format: jpg, jpeg, png • Max file size: 10 MB</p>
+
               <input
                 type="file"
                 accept="image/jpeg, image/png, image/jpg"
                 onChange={handleFileChange}
-                className="mt-4 p-2 bg-white text-black rounded-md border border-gray-300 w-full opacity-0 cursor-pointer"
+                className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
               />
+
               {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
               {file && <p className="text-white mt-2">Selected file: {file.name}</p>}
             </label>
