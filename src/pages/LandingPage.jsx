@@ -8,6 +8,7 @@ export default function LandingPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isConsentChecked, setIsConsentChecked] = useState(false); // State for consent checkbox
 
   const navigate = useNavigate();
 
@@ -31,12 +32,11 @@ export default function LandingPage() {
 
       setError("");
       setFile(uploadedFile);
-      setIsLoading(true);
     }
   };
 
   useEffect(() => {
-    if (isLoading) {
+    if (isLoading && isConsentChecked) { // Only proceed if consent is checked
       const interval = setInterval(() => {
         setProgress((prevProgress) => {
           if (prevProgress >= 100) {
@@ -57,7 +57,7 @@ export default function LandingPage() {
         });
       }, 150);
     }
-  }, [isLoading, navigate, file]);
+  }, [isLoading, navigate, file, isConsentChecked]); // Added isConsentChecked dependency
 
   const getProgressText = () => {
     if (progress < 25) return "Crafting your article...";
@@ -65,6 +65,16 @@ export default function LandingPage() {
     if (progress < 75) return "Spilling the digital ink...";
     if (progress < 100) return "Hold tight! Your article is almost here...";
     return "Complete!";
+  };
+
+  const handleConsentChange = (event) => {
+    setIsConsentChecked(event.target.checked); // Update consent state
+  };
+
+  const handleStartLoading = () => {
+    if (isConsentChecked && file) {
+      setIsLoading(true); // Start the loading process after consent is given
+    }
   };
 
   return (
@@ -142,6 +152,36 @@ export default function LandingPage() {
               {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             </label>
           </div>
+{/* Detailed Consent Checkbox */}
+{file && !isLoading && (
+  <label className="flex items-start text-white space-x-2 mt-4 max-w-3xl">
+    <input
+      type="checkbox"
+      checked={isConsentChecked}
+      onChange={handleConsentChange}
+      className="mt-1"
+    />
+    <span>
+      I hereby consent to the collection, processing, and temporary storage of the image I upload. 
+      I understand that the image will be used solely for the purpose of generating a personalized article using AI technology. 
+      The uploaded file will not be shared with third parties and will be automatically deleted after processing is complete. 
+      I acknowledge that no personally identifiable information (PII) will be extracted or stored from the image, 
+      and I retain full rights and ownership over the original content. 
+    </span>
+  </label>
+)}
+          
+
+
+          {/* Button to start loading if consent is given */}
+          {file && isConsentChecked && !isLoading && (
+            <button
+              onClick={handleStartLoading}
+              className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-lg font-medium flex items-center justify-center gap-3 max-w-xs"
+            >
+              Start Processing Image
+            </button>
+          )}
         </div>
       </div>
       <Footer />
