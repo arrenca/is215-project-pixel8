@@ -66,7 +66,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="landing-container h-screen overflow-hidden font-inter">
+    <div className="landing-container min-h-screen flex flex-col font-inter">
       <Header />
 
       {isLoading && (
@@ -86,30 +86,44 @@ export default function LandingPage() {
       )}
 
       <div
-        className="relative h-[calc(100vh-88px)] bg-gray-100 bg-cover bg-center mt-2.5"
+        className="relative flex-1 bg-gray-100 bg-cover bg-center mt-2.5"
         style={{ backgroundImage: "url('/images/background-landing_1.png')" }}
       >
         <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
 
         <div className="relative z-10 ml-16 pl-6 p-4 rounded-md h-full flex flex-col justify-between">
           <div className="mt-[50px]">
-            <h1 className="text-[70px] font-[700] leading-[100%] tracking-[-0.02em] text-white mb-4 font-inconsolata">
+            <h1 className="text-[70px] font-[600] leading-[100%] tracking-[0.02em] text-white mb-4 font-inconsolata [text-shadow:_2px_2px_6px_rgba(0,0,0,0.4)]">
               Unlock the story in every pixel.
             </h1>
-            <p className="text-3xl text-white mb-4">
+            <p className="text-3xl text-white mb-0.5 font-thin tracking-[0.05em]">
               Upload a photo and let AI uncover the story behind it — one pixel at a time.
             </p>
-            <p className="text-3xl text-white mb-6 -mt-4">
+            <p className="text-3xl text-white mb-20 font-thin tracking-[0.05em]">
               Drop your image here or click to upload.
             </p>
           </div>
 
-          <div className="upload-file flex justify-start w-full mb-16">
-            <label className="relative bg-[#113f67cc] border-2 border-dashed border-white text-white rounded-lg p-6 max-w-2xl w-full cursor-pointer">
-              <p className="text-2xl font-semibold mb-2">
+          <div className="upload-file flex justify-start w-full mb-8">
+            <label 
+              className="relative bg-[#113f67cc] text-white rounded-[20px] py-2 px-4 max-w-[44rem] w-full cursor-pointer" 
+              style={{ 
+                background: '#113f67cc',
+                borderRadius: '10px',
+                borderStyle: 'dashed',
+                borderWidth: '2px',
+                borderColor: 'white',
+                backgroundClip: 'padding-box',
+                borderImageSource: 'url("data:image/svg+xml,%3csvg width=\'100%25\' height=\'100%25\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3crect width=\'100%25\' height=\'100%25\' rx=\'20\' ry=\'20\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-dasharray=\'6%2c 14\' stroke-linecap=\'round\'/%3e%3c/svg%3e")',
+                borderImageSlice: 1,
+                borderImageRepeat: 'round',
+                minHeight: 'calc(100% - 14px)'
+              }}
+            >
+              <p className="text-[30px] font-medium mb-0.5 font-[100] tracking-[0.06em]">
                 Drop your image here or click to upload.
               </p>
-              <p className="text-base">Format: jpg, jpeg, png • Max file size: 10 MB</p>
+              <p className="text-base">Format: jpg, jpeg, png & Max file size: 10 MB</p>
 
               <input
                 type="file"

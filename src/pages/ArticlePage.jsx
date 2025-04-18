@@ -97,10 +97,10 @@ export default function ArticlePage() {
       )}
 
       <div className="content-container max-w-2xl mx-auto py-10 px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
+        <h1 className="text-[55px] font-[700] text-gray-900 mb-2 text-left">
           Article or post title
         </h1>
-        <p className="text-gray-600 text-base mb-6 text-center">
+        <p className="text-[18px] text-gray-600 text-base mb-6 text-left">
           Subheading that sets up context, shares more info about the author, or generally gets people psyched to keep reading
         </p>
 
@@ -112,7 +112,7 @@ export default function ArticlePage() {
           />
         </div>
 
-        <div className="flex flex-col items-center text-gray-700 text-base space-y-6">
+        <div className="text-[18px] flex flex-col items-center text-gray-700 text-base space-y-6">
           <p className="text-left max-w-xl">
           Body text for your whole article or post. We’ll put in some lorem ipsum to show how a filled-out page might look:          </p>
           <p className="text-left max-w-xl">
@@ -136,19 +136,34 @@ export default function ArticlePage() {
         <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
 
         <div className="relative z-10 pl-10 p-4 rounded-md">
-          <h1 className="text-3xl font-bold text-gray-100 mb-4">
+          <h1 className="text-[65px] font-[700] tracking-[0.06em] text-gray-100 mb-2 font-[inconsolata]">
             Let the pixels speak again.
           </h1>
-          <h3 className="text-lg text-gray-300 mb-6">
+          <h3 className="text-[30px] font-[400] tracking-[0.05em] text-gray-300 mb-6">
             Upload another image to generate a new story.
           </h3>
 
           <div className="upload-file flex justify-start">
-            <label className="bg-[#113f67cc] border-2 border-dashed border-white text-white rounded-lg p-6 max-w-md w-full cursor-pointer relative">
-              <p className="text-xl font-medium mb-2">
+            <label 
+              className="relative bg-[#113f67cc] text-white rounded-[20px] py-1.5 px-4 max-w-[44rem] w-full cursor-pointer" 
+              style={{ 
+                background: '#113f67cc',
+                borderRadius: '10px',
+                borderStyle: 'dashed',
+                borderWidth: '2px',
+                borderColor: 'white',
+                backgroundClip: 'padding-box',
+                borderImageSource: 'url("data:image/svg+xml,%3csvg width=\'100%25\' height=\'100%25\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3crect width=\'100%25\' height=\'100%25\' rx=\'20\' ry=\'20\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-dasharray=\'6%2c 14\' stroke-linecap=\'round\'/%3e%3c/svg%3e")',
+                borderImageSlice: 1,
+                borderImageRepeat: 'round',
+                minWidth: 'calc(42rem + 8px)',
+                minHeight: 'calc(100% - 16px)'
+              }}
+            >
+              <p className="text-3xl text-white mb-0.5 font-thin tracking-[0.05em]">
                 Drop your image here or click to upload.
               </p>
-              <p className="text-sm">Format: jpg, jpeg, png • Max file size: 10 MB</p>
+              <p className="text-base">Format: jpg, jpeg, png & Max file size: 10 MB</p>
 
               <input
                 type="file"
