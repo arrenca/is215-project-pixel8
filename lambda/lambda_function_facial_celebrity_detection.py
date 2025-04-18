@@ -82,7 +82,7 @@ def generateArticle(labels, celebrities):
     prompt = (
         f'Generate a two-paragraph news article based on the following content: {label_names}. '
         f'Include a one-line title at the start followed by a new line. '
-        f'Be as creative as possible but make the story coherent.'
+        f'Be as creative as possible but make the story coherent. Be whimsical or dramatic—have fun with it. If it's a known personality or celebrity, make sure to include their actual name in the storyline.'
     )
     data = {
         'model': 'gpt-3.5-turbo',
