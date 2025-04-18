@@ -12,7 +12,7 @@ export default function Header() {
       <img 
         src="/images/logo.png" 
         alt="logo"
-        className="w-[350px] h-[100px] ml-10 cursor-pointer" 
+        className="w-[300px] h-[100px] ml-10 cursor-pointer" 
         onClick={handleNavigate}
       />
     </header>

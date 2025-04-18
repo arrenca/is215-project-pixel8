@@ -60,8 +60,10 @@ export default function LandingPage() {
   }, [isLoading, navigate, file]);
 
   const getProgressText = () => {
-    if (progress < 50) return "Loading...";
-    if (progress < 100) return "Almost ready...";
+    if (progress < 25) return "Crafting your article...";
+    if (progress < 50) return "Unlocking the story...";
+    if (progress < 75) return "Spilling the digital ink...";
+    if (progress < 100) return "Hold tight! Your article is almost here...";
     return "Complete!";
   };
 
@@ -70,15 +72,20 @@ export default function LandingPage() {
       <Header />
 
       {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col items-center justify-center">
-          <div className="w-2/3 max-w-xl px-4">
+        <div className="fixed inset-0 bg-white/30 backdrop-blur-lg z-50 flex flex-col items-center justify-center">
+          <div className="w-2/3 max-w-xl px-4 flex flex-col items-center justify-center">
+            <img
+              src="/images/logo.png"
+              alt="logo"
+              className="w-[300px] h-[100px] mb-6 mx-auto"
+            />
             <div className="bg-white rounded-full h-4 w-full mb-4 overflow-hidden shadow-lg">
               <div
-                className="bg-green-500 h-4 rounded-full transition-all duration-300 ease-in-out"
+                className="bg-blue-500 h-4 rounded-full transition-all duration-300 ease-in-out"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-            <p className="text-white text-xl font-semibold text-center animate-pulse">
+            <p className="text-gray-800 text-xl font-semibold text-center animate-pulse">
               {getProgressText()}
             </p>
           </div>
@@ -111,10 +118,10 @@ export default function LandingPage() {
                 background: '#113f67cc',
                 borderRadius: '10px',
                 borderStyle: 'dashed',
-                borderWidth: '2px',
+                borderWidth: '1px',
                 borderColor: 'white',
                 backgroundClip: 'padding-box',
-                borderImageSource: 'url("data:image/svg+xml,%3csvg width=\'100%25\' height=\'100%25\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3crect width=\'100%25\' height=\'100%25\' rx=\'20\' ry=\'20\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-dasharray=\'6%2c 14\' stroke-linecap=\'round\'/%3e%3c/svg%3e")',
+                borderImageSource: 'url("data:image/svg+xml,%3csvg width=\'100%25\' height=\'100%25\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3crect width=\'100%25\' height=\'100%25\' rx=\'20\' ry=\'20\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-dasharray=\'20%2c 14\' stroke-linecap=\'round\'/%3e%3c/svg%3e")',
                 borderImageSlice: 1,
                 borderImageRepeat: 'round',
                 minHeight: 'calc(100% - 14px)'
@@ -133,7 +140,6 @@ export default function LandingPage() {
               />
 
               {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-              {file && <p className="text-white mt-2">Selected file: {file.name}</p>}
             </label>
           </div>
         </div>
