@@ -1,10 +1,10 @@
 '''
 Notes: 
-* Use Python for the Lambda runtime and set timeout to at least 2 minutes
-* Set Environment variables for OPENAI_API_URL and OPENAI_API_TOKEN
-* Make sure to set the Lambda function's execution role to have permissions for Rekognition and S3
+* Use Python for the Lambda runtime and set timeout to at least 2 minutes (under Configration > General configuration)
+* Set Environment variables for OPENAI_API_URL and OPENAI_API_TOKEN (under Configration > Environment variables)
+* Make sure to set the Lambda function's execution role to have permissions for Rekognition and S3 (under Configration > Permissions > Execution role)
 * Confirmed working when tried on lab AWS account
-* This creates a JSON file as the output containing labels and AI-generated article but can be tweaked if no output file is required
+* This function creates a JSON file as the output containing labels and AI-generated article but can be tweaked if no output file is required
 '''
 
 import boto3
