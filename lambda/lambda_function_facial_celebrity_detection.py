@@ -1,5 +1,5 @@
-# Note: We need to use Python for the Lambda runtime
-# I confirmed this is working when I tried it on my own AWS account
+# Note: Use Python for the Lambda runtime and set timeout to at least 2 minutes
+# Confirmed working when tried on lab AWS account
 # This creates a JSON file as the output but can be tweaked if no output file is required
 
 import boto3
@@ -78,6 +78,7 @@ def generateArticle(labels, celebrities):
         'Content-Type': 'application/json'
     }
 
+    # Prompt for Open AI
     label_names = ", ".join(label_list)
     prompt = (
         f'Generate a two-paragraph news article based on the following content: {label_names}. '
