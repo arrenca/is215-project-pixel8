@@ -38,7 +38,9 @@ Automatic Generation of Articles using Amazon Rekognition and OpenAI.
   - Click Bucket input and select the S3 bucket created in step 1.
   - Click Event types input and check `✅ PUT` only.
   - Check ✅ I acknowledge that using the same S3 bucket for both input and output is not recommended and that this configuration can cause recursive invocations, increased Lambda usage, and increased costs.
+  - Set Suffix to .jpg
   - Click `Add` button at the bottom of the page.
+  - Repeat this step, replacing suffix with .png and other accepted filetypes. This ensures that the Lambda function runs only on supported filetypes.
 
 ### 4. Configure the newly created Lambda function
   - On the Lambda function page, click Configuration at the menu bar below Function overview.
