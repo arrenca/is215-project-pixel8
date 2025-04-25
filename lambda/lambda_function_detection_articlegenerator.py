@@ -11,6 +11,7 @@ import boto3
 import json
 import urllib.request
 import os
+import random
 
 s3 = boto3.client('s3')
 rekognition = boto3.client('rekognition')
@@ -39,7 +40,6 @@ def lambda_handler(event, context):
         'celebrities': []
     }
     
-    # Process recognized celebrities
     for celebrity in celebrity_response['CelebrityFaces']:
         output['celebrities'].append({
             'name': celebrity['Name'],
@@ -50,10 +50,15 @@ def lambda_handler(event, context):
     # Generate an article using OpenAI
     article = generateArticle(output['labels'], output['celebrities'])
     output['article_title'] = article['article_title']
+    output['article_subtitle'] = article['article_subtitle']
     output['article_content'] = article['article_content']
-    
+    output['article_category'] = article['article_category']
+
+
     # Write the JSON output to S3
-    output_key = f"analysis/{key.split('/')[-1]}.json"
+    filename = os.path.splitext(key.split('/')[-1])[0] # Remove image file extension
+    output_key = f"analysis/{filename}.json"
+
     s3.put_object(
         Bucket=bucket,
         Key=output_key,
@@ -78,24 +83,37 @@ def generateArticle(labels, celebrities):
     for label in labels:
         label_list.append(label['Name'])
 
+    keywords = ", ".join(label_list)
+
     headers = {
         'Authorization': f'Bearer {token}',
         'Content-Type': 'application/json'
     }
 
+    # Category
+    categories = ['Headline', 'News', 'Sports', 'Feature', 'Editorial', 'Business', 'Entertainment']
+    category = random.choice(categories) # Randomly select a category for the prompt
+
     # Prompt for Open AI
-    label_names = ", ".join(label_list)
     prompt = (
-        f'Generate a two-paragraph news article based on the following content: {label_names}. '
-        f'Include a one-line title at the start followed by a new line. '
-        f'Be as creative as possible but make the story coherent.'
+        f"Imagine you're writing for the {category} section of a major newspaper. "
+        f"Based on these keywords: {keywords}, generate a fictional but realistic newspaper article. "
+        f"Your response must include:\n"
+        f"1. A clear, attention-grabbing title.\n"
+        f"2. A one-sentence sub-title.\n"
+        f"3. The full article body (2 paragraphs).\n\n"
+        f"Format your response like this:\n"
+        f"Title: <your title>\n"
+        f"Sub-title: <your sub-title>\n"
+        f"Content:\n<your 2-paragraph article>"
     )
+
     data = {
         'model': 'gpt-3.5-turbo',
         'messages': [
             {
                 'role': 'system',
-                'content': 'You are a helpful assistant.'
+                'content': 'You are a creative and precise news writer.'
             },
             {
                 'role': 'user',
@@ -111,10 +129,28 @@ def generateArticle(labels, celebrities):
         response_dict = json.loads(response_string)
 
         # Extract content from OpenAI response
-        response_content = response_dict['choices'][0]['message']['content']
-        title, content = response_content.split('\n', 1)
+        content = response_dict['choices'][0]['message']['content']
+
+    lines = content.strip().split('\n')
+    title = ""
+    sub_title = ""
+    article_body = ""
+    parse_content = False
+
+    for line in lines:
+        line = line.strip()
+        if line.startswith("Title:"):
+            title = line.replace("Title:", "").strip()
+        elif line.startswith("Sub-title:"):
+            sub_title = line.replace("Sub-title:", "").strip()
+        elif line.startswith("Content:"):
+            parse_content = True
+        elif parse_content and line:
+            article_body += line + "\n"
 
     return {
-        'article_title': title.strip(),
-        'article_content': content.strip()
+        'article_title': title,
+        'article_subtitle': sub_title,
+        'article_content': article_body,
+        'article_category': category
     }
