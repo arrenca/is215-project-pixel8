@@ -79,4 +79,61 @@ Automatic Generation of Articles using Amazon Rekognition and OpenAI.
     - Click `View CloudWatch logs` button.
     - Open `Log streams` at the menu bar below Log group details. It should be opened by default.
     - Click the top item on the Log streams table. It should open the logs of the most recent run of the Lambda function
-  
+
+
+
+## Lambda Output
+The output of the Lambda function will be saved to `analysis/` folder of the same S3 bucket.
+Same filename will be used. For example, uploading `playing-tennis.jpg` will result to `analysis/playing-tennis.json`.
+
+### Example of a successful JSON output:
+<details>
+  <summary>concert.json</summary>
+
+  ```
+  {
+    "image": "concert.jpg",
+    "success": true,
+    "article_title": "Musical Prodigy Sabrina Carpenter Channels Taylor Swift's Iconic Sound",
+    "article_subtitle": "Rising star Sabrina Carpenter showcases her musical prowess with a guitar in hand, drawing comparisons to the legendary Taylor Swift.",
+    "article_content": "In the bustling world of pop music, 23-year-old Sabrina Carpenter has emerged as a standout musician, captivating audiences with her dynamic performances and soulful voice. The multi-talented artist, often dubbed as the younger counterpart of Taylor Swift, exhibits a natural flair for the guitar, effortlessly strumming chords that echo the melodic charm reminiscent of Swift's early hits. As she navigates her way into adulthood, Carpenter's musical journey mirrors the evolution of her idol, with songs that blend catchy pop hooks with introspective lyrics that resonate with listeners of all ages.\nAmidst a sea of emerging talents, Sabrina Carpenter shines as a female force in the music industry, breaking barriers and defying expectations with each soul-stirring ballad she delivers. With her infectious stage presence and unwavering dedication to her craft, Carpenter proves that age is no hindrance when it comes to making a mark in the world of music. As she continues to enchant audiences with her heartfelt performances, the future looks exceptionally bright for this young powerhouse who embodies the essence of a true musician – fierce, authentic, and unapologetically herself, much like her musical inspiration, Taylor Swift.\n",
+    "article_category": "Feature",
+    "labels": [
+      {
+        "name": "Music",
+        "confidence": 99.97051239013672
+      },
+      {
+        "name": "Musical Instrument",
+        "confidence": 99.97051239013672
+      }
+    ],
+    "celebrities": [
+      {
+        "name": "Taylor Swift",
+        "confidence": 99.3763656616211
+      },
+      {
+        "name": "Sabrina Carpenter",
+        "confidence": 99.0667495727539
+      }
+    ]
+  }
+  ```
+</details>
+
+### Example of an unsuccessful JSON output:
+<details>
+  <summary>corrupted_photo.json</summary>
+
+  ```
+  {
+    "image": "corrupted_photo.jpg",
+    "success": false,
+    "error": "Failed to detect labels using Rekognition.",
+    "detect_labels_exception": "An error occurred (InvalidImageFormatException) when calling the DetectLabels operation: Request has invalid image format",
+    "detect_celebrities_exception": "An error occurred (InvalidImageFormatException) when calling the RecognizeCelebrities operation: Request has invalid image format"
+  }
+  ```
+</details>
+
