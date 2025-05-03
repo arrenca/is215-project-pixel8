@@ -119,29 +119,32 @@ export default function ArticlePage() {
         </div>
       )}
 
-      <div className="content-container max-w-3xl sm:max-w-4xl md:max-w-5xl mx-auto py-6 sm:py-8 md:py-10 px-4">
-        <h1 className="text-3xl sm:text-4xl md:text-[55px] font-[700] text-gray-900 mb-2 sm:mb-6 md:mb-8 text-left leading-tight">
-          Article or post title
-        </h1>
-        <p className="text-base sm:text-lg md:text-[18px] text-gray-600 mb-2 sm:mb-2 md:mb-4x text-left mt-2 sm:mt-4 md:mt-6">
-          Subheading that sets up context, shares more info about the author, or generally gets people psyched to keep reading
-        </p>
-      </div>
+      <div className="flex flex-col px-4">
+        {/* <div className="content-container max-w-3xl sm:max-w-4xl md:max-w-5xl mx-auto py-6 sm:py-8 md:py-10 md:px-4"> */}
+        <div className="max-w-4xl mx-auto text-lg space-y-6 text-justify mt-5">
+          <h1 className="text-3xl md:px-0 sm:text-4xl md:text-[55px] font-[700] text-gray-900 mb-2 sm:mb-6 md:mb-8 text-left leading-tight">
+            Article or post title
+          </h1>
+          <p className="text-base md:px-0 sm:text-lg md:text-[18px] text-gray-600 mb-2 sm:mb-2 md:mb-4x text-left mt-2 sm:mt-4 md:mt-6">
+            Subheading that sets up context, shares more info about the author, or generally gets people psyched to keep reading
+          </p>
+        </div>
 
-      {/* Article Image */}
-      <div className="relative w-full overflow-hidden mt-[-25px] mb-10 flex justify-center">
-        <img
-          src={imageUrl}
-          alt="Post visual"
-          className="w-full max-w-[1100px] h-auto object-contain rounded-lg"
-        />
-      </div>
+        {/* Article Image */}
+        <div className="relative w-full overflow-hidden mt-3 mb-4 flex justify-center">
+          <img
+            src={imageUrl}
+            alt="Post visual"
+            className="w-full max-w-[895px] h-auto object-contain rounded-lg"
+          />
+        </div>
 
-      {/* Article Body */}
-      <div className="max-w-4xl mx-auto px-6 text-lg space-y-6">
-        <p>Body text for your whole article or post. We'll put in some lorem ipsum to show how a filled-out page might look:</p>
-        <p>Excepteur efficient emerging, minim veniam anim aute carefully curated Ginza conversation exquisite perfect nostrud nisi intricate Content. Qui international first-class nulla ut.</p>
-        <p>Exquisite sophisticated iconic cutting-edge laborum deserunt Addis Ababa esse bureaux cupidatat id minim.</p>
+        {/* Article Body */}
+        <div className="max-w-4xl mx-auto text-lg space-y-6 text-justify">
+          <p>Body text for your whole article or post. We'll put in some lorem ipsum to show how a filled-out page might look:</p>
+          <p>Excepteur efficient emerging, minim veniam anim aute carefully curated Ginza conversation exquisite perfect nostrud nisi intricate Content. Qui international first-class nulla ut.</p>
+          <p>Exquisite sophisticated iconic cutting-edge laborum deserunt Addis Ababa esse bureaux cupidatat id minim.</p>
+        </div>
       </div>
 
       {/* Download Button */}
@@ -171,8 +174,8 @@ export default function ArticlePage() {
             <label 
               className={`relative bg-[#113f67cc] text-white py-2 px-4 w-full sm:max-w-[44rem] cursor-pointer
                 ${windowWidth === 375 
-                  ? 'rounded-lg border border-dashed border-white border-opacity-80 [border-style:dashed] [border-width:1px] [border-spacing:2px]'
-                  : 'rounded-2xl border-2 border-dashed border-white border-opacity-90 [border-style:dashed] [border-width:2px] [border-spacing:4px]'
+                  ? 'rounded-lg border-white border-opacity-80 [border-style:dashed] [border-width:1px] [border-spacing:2px]'
+                  : 'rounded-2xl border-white border-opacity-90 [border-style:dashed] [border-width:2px] [border-spacing:4px]'
                 }`}
               style={{
                 borderStyle: 'dashed',
@@ -181,7 +184,7 @@ export default function ArticlePage() {
                 backgroundClip: 'padding-box'
               }}
             >
-              <p className="text-xl sm:text-2xl md:text-[30px] font-medium mb-0.5 font-[100] tracking-[0.06em] text-left">
+              <p className="text-xl sm:text-2xl md:text-[30px] mb-0.5 font-[100] tracking-[0.06em] text-left">
                 Drop your image here or click to upload.
               </p>
               <p className="text-sm sm:text-base text-left mt-1">
