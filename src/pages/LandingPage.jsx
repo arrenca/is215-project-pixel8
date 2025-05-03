@@ -37,63 +37,127 @@ export default function LandingPage() {
     }
   }
 
+  // useEffect(() => {
+  //   if (isLoading && isConsentChecked) {
+  //     const interval = setInterval(() => {
+  //       setProgress((prevProgress) => {
+  //         if (prevProgress >= 100) {
+  //           clearInterval(interval)
+
+  //           // Upload the image here
+  //           const uploadImage = async () => {
+  //             const formData = new FormData()
+  //             formData.append("image", file)
+
+  //             try {
+  //               const response = await fetch(
+  //                 "https://project.vrsevilla.is215.upou.io/api/upload",
+  //                 {
+  //                   method: "POST",
+  //                   body: formData,
+  //                 }
+  //               )
+
+  //               if (!response.ok) {
+  //                 throw new Error("Upload failed")
+  //               }
+
+  //               const result = await response.json()
+  //               console.log("Upload result:", result)
+
+  //               // After successful upload, navigate
+  //               setTimeout(() => {
+  //                 setIsLoading(false)
+  //                 setProgress(0)
+  //                 navigate("/article-page", {
+  //                   state: {
+  //                     imageUrl: URL.createObjectURL(file),
+  //                     fromUpload: true,
+  //                     ...result?.analysis
+  //                   },
+  //                 })
+  //               }, 500)
+  //             } catch (error) {
+  //               console.error("Error uploading image:", error)
+  //               setIsLoading(false)
+  //             }
+  //           }
+
+  //           uploadImage()
+
+  //           return 100
+  //         }
+
+  //         return prevProgress + 5
+  //       })
+  //     }, 150)
+
+  //     return () => clearInterval(interval)
+  //   }
+  // }, [isLoading, navigate, file, isConsentChecked])
+
   useEffect(() => {
     if (isLoading && isConsentChecked) {
-      const interval = setInterval(() => {
-        setProgress((prevProgress) => {
-          if (prevProgress >= 100) {
-            clearInterval(interval)
-
-            // Upload the image here
-            const uploadImage = async () => {
-              const formData = new FormData()
-              formData.append("image", file)
-
-              try {
-                const response = await fetch(
-                  "https://project.vrsevilla.is215.upou.io/api/upload",
-                  {
-                    method: "POST",
-                    body: formData,
-                  }
-                )
-
-                if (!response.ok) {
-                  throw new Error("Upload failed")
-                }
-
-                const result = await response.json()
-                console.log("Upload result:", result)
-
-                // After successful upload, navigate
+      const uploadImage = async () => {
+        const formData = new FormData();
+        formData.append("image", file);
+  
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "https://project.vrsevilla.is215.upou.io/api/upload");
+  
+        let uploadComplete = false;
+  
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable) {
+            const percentComplete = (event.loaded / event.total) * 100;
+            setProgress(Math.min(Math.round(percentComplete), 95)); // Cap at 95% for upload
+          }
+        };
+  
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            const result = JSON.parse(xhr.responseText);
+            uploadComplete = true;
+  
+            // Animate progress from 95 to 100 while "processing"
+            let fakeProgress = 95;
+            const processingInterval = setInterval(() => {
+              fakeProgress += 1;
+              setProgress(fakeProgress);
+  
+              if (fakeProgress >= 100) {
+                clearInterval(processingInterval);
                 setTimeout(() => {
-                  setIsLoading(false)
-                  setProgress(0)
+                  setIsLoading(false);
+                  setProgress(0);
                   navigate("/article-page", {
                     state: {
                       imageUrl: URL.createObjectURL(file),
                       fromUpload: true,
+                      ...result?.analysis,
                     },
-                  })
-                }, 500)
-              } catch (error) {
-                console.error("Error uploading image:", error)
-                setIsLoading(false)
+                  });
+                }, 500);
               }
-            }
-
-            uploadImage()
-
-            return 100
+            }, 50);
+          } else {
+            setIsLoading(false);
+            console.error("Upload failed:", xhr.responseText);
           }
-
-          return prevProgress + 5
-        })
-      }, 150)
-
-      return () => clearInterval(interval)
+        };
+  
+        xhr.onerror = () => {
+          setIsLoading(false);
+          console.error("Upload error");
+        };
+  
+        xhr.send(formData);
+      };
+  
+      uploadImage();
     }
-  }, [isLoading, navigate, file, isConsentChecked])
+  }, [isLoading, isConsentChecked, file, navigate]);
+  
 
   useEffect(() => {
     const handleResize = () => {
@@ -105,8 +169,8 @@ export default function LandingPage() {
 
   const getProgressText = () => {
     if (progress < 25) return "Crafting your article..."
-    if (progress < 50) return "Unlocking the story..."
-    if (progress < 75) return "Spilling the digital ink..."
+    // if (progress < 50) return "Unlocking the story..."
+    // if (progress < 75) return "Spilling the digital ink..."
     if (progress < 100) return "Hold tight! Your article is almost here..."
     return "Complete!"
   }
