@@ -10,6 +10,8 @@ ALLOWED_IMAGE_EXTENSIONS = {"png", "jpg", "jpeg"}
 MAX_IMAGE_SIZE_MB = 10
 S3_BUCKET_NAME = "is215-groupb-pixel8-s3"
 S3_ANALYSIS_PREFIX = "analysis/"
+MAX_RETRIES = 10
+DELAY_SECONDS = 6
 
 # Initialize S3 client using IAM role (assumed role)
 s3 = boto3.client("s3")
@@ -50,7 +52,6 @@ def get_analysis_json(sanitized_filename):
         json_data = json.loads(response['Body'].read().decode('utf-8'))
         return json_data
     except s3.exceptions.NoSuchKey:
-        print(f"No analysis JSON found for: {json_key}")
         return None
     except Exception as e:
         print(f"Error retrieving JSON: {e}")
@@ -70,25 +71,34 @@ def load_image_to_s3(image_file_path):
         url = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/{sanitized_filename}"
         print(f"File uploaded successfully! Accessible at: {url}")
 
-        # Wait for the analysis JSON to appear
-        print("Waiting for analysis JSON...")
-        for _ in range(30):  # wait time
-            json_data = get_analysis_json(sanitized_filename)
-            if json_data:
-                print("Analysis JSON retrieved:")
-                print(json.dumps(json_data, indent=2))
-                return {
-                    "image_url": url,
-                    "analysis": json_data
-                }
-            time.sleep(1)
+        # Retry logic to fetch analysis JSON
+        print("Waiting for analysis JSON to become available...")
+        analysis_data = None
+        for attempt in range(MAX_RETRIES):
+            analysis_data = get_analysis_json(sanitized_filename)
+            if analysis_data:
+                print(f"Analysis JSON found on attempt {attempt + 1}")
+                break
+            print(f"Attempt {attempt + 1}/{MAX_RETRIES}: JSON not ready. Retrying in {DELAY_SECONDS}s...")
+            time.sleep(DELAY_SECONDS)
 
-        print("Analysis JSON not found within timeout.")
-        return {"image_url": url, "analysis": None}
+        if not analysis_data:
+            print("Analysis JSON not found after waiting.")
+
+        return {
+            "filename": sanitized_filename,
+            "message": "Upload successful",
+            "image_url": url,
+            "analysis": analysis_data if analysis_data else {"note": "Analysis JSON not found after waiting."}
+        }
 
     except Exception as e:
         print(f"Error uploading file to S3: {e}")
-        return None
+        return {
+            "filename": os.path.basename(image_file_path),
+            "message": "Upload failed",
+            "error": str(e)
+        }
 
 
 def main():
