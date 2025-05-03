@@ -1,13 +1,19 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, 
+  // useNavigate 
+} 
+  from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import html2pdf from "html2pdf.js"
 
 export default function ArticlePage() {
   const location = useLocation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+
+  const data = location.state
 
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
@@ -97,6 +103,19 @@ export default function ArticlePage() {
     return "Complete!";
   };
 
+  function downloadPdf(){
+    const element = document.getElementById("printcont")
+    const opt = {
+      margin:       0.1,
+      filename:     'Article.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'A4', orientation: 'portrait' }
+    }
+  
+    html2pdf().from(element).set(opt).save()
+  }
+
   return (
     <div className="landing-container bg-white min-h-screen font-inter">
       <Header />
@@ -119,38 +138,50 @@ export default function ArticlePage() {
         </div>
       )}
 
-      <div className="flex flex-col px-4">
-        {/* <div className="content-container max-w-3xl sm:max-w-4xl md:max-w-5xl mx-auto py-6 sm:py-8 md:py-10 md:px-4"> */}
-        <div className="max-w-4xl mx-auto text-lg space-y-6 text-justify mt-5">
-          <h1 className="text-3xl md:px-0 sm:text-4xl md:text-[55px] font-[700] text-gray-900 mb-2 sm:mb-6 md:mb-8 text-left leading-tight">
-            Article or post title
-          </h1>
-          <p className="text-base md:px-0 sm:text-lg md:text-[18px] text-gray-600 mb-2 sm:mb-2 md:mb-4x text-left mt-2 sm:mt-4 md:mt-6">
-            Subheading that sets up context, shares more info about the author, or generally gets people psyched to keep reading
-          </p>
-        </div>
+      <div className="mb-5"></div>
 
-        {/* Article Image */}
-        <div className="relative w-full overflow-hidden mt-3 mb-4 flex justify-center">
-          <img
-            src={imageUrl}
-            alt="Post visual"
-            className="w-full max-w-[895px] h-auto object-contain rounded-lg"
-          />
-        </div>
+      <div className="flex flex-row justify-center w-full" id="printcont">
+        <div className="flex flex-col px-4">
+            {/* <div className="content-container max-w-3xl sm:max-w-4xl md:max-w-5xl mx-auto py-6 sm:py-8 md:py-10 md:px-4"> */}
+          <div className="max-w-4xl text-lg flex flex-col gap-3">
+            <h1 className="text-3xl md:px-0 sm:text-4xl md:text-[55px] font-[700] text-gray-900 mb-2 sm:mb-6 md:mb-8 text-start" style={{ lineHeight: '1' }}>
+              {data?.article_title ?? ""}
+            </h1>
+            <p className="m-0 bg-gray-800 text-white px-3 py-2 rounded-2xl w-fit text-sm">{data.article_category ?? ""}</p>
+            <p className="text-base md:px-0 sm:text-md md:text-[18px] text-gray-500 mb-2 sm:mb-2 md:mb-4x text-left">
+              {data?.article_subtitle ?? ""}
+            </p>
+          </div>
 
-        {/* Article Body */}
-        <div className="max-w-4xl mx-auto text-lg space-y-6 text-justify">
-          <p>Body text for your whole article or post. We'll put in some lorem ipsum to show how a filled-out page might look:</p>
-          <p>Excepteur efficient emerging, minim veniam anim aute carefully curated Ginza conversation exquisite perfect nostrud nisi intricate Content. Qui international first-class nulla ut.</p>
-          <p>Exquisite sophisticated iconic cutting-edge laborum deserunt Addis Ababa esse bureaux cupidatat id minim.</p>
+          {/* Article Image */}
+          <div className="relative w-full overflow-hidden mt-3 mb-3">
+            <img
+              src={imageUrl}
+              alt="Post visual"
+              className="w-full max-w-[895px] h-auto object-contain"
+            />
+          </div>
+
+          <div className="max-w-4xl text-lg text-justify mb-4 w-full flex flex-row gap-2 justify-start">
+            {(data.celebrities ?? []).map((celeb, index) => (
+              <span key={index} className="text-sm italic bg-opacity-25 text-gray-800">{celeb.name}{index === (data.celebrities.length - 1) ? "" : ","}</span>
+            ))}
+          </div>
+
+          {/* Article Body */}
+          <div className="max-w-4xl text-lg space-y-6 text-justify">
+            {/* <p>Body text for your whole article or post. We'll put in some lorem ipsum to show how a filled-out page might look:</p>
+            <p>Excepteur efficient emerging, minim veniam anim aute carefully curated Ginza conversation exquisite perfect nostrud nisi intricate Content. Qui international first-class nulla ut.</p>
+            <p>Exquisite sophisticated iconic cutting-edge laborum deserunt Addis Ababa esse bureaux cupidatat id minim.</p> */}
+            <p>{data.article_content ?? ""}</p>
+          </div>
         </div>
       </div>
 
       {/* Download Button */}
       <div className="max-w-4xl mx-auto px-6 mt-12 flex justify-center">
-        <button className="bg-red-200 hover:bg-red-600 text-black px-4 py-2 rounded-md text-lg font-medium flex items-center justify-center gap-3">
-          <FontAwesomeIcon icon={faFilePdf} size="lg" className="text-red-600" />
+        <button className="bg-red-200 text-red-600 hover:bg-red-600 hover:text-white px-4 py-2 rounded-md text-lg font-medium flex items-center justify-center gap-3" onClick={downloadPdf}>
+          <FontAwesomeIcon icon={faFilePdf} size="lg" className="" />
           DOWNLOAD
         </button>
       </div>
