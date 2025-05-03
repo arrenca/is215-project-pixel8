@@ -49,7 +49,7 @@ useEffect(() => {
             formData.append('file', file);
 
             try {
-              const response = await fetch('https://project.vrsevilla.is215.upou.io:5000/upload', { 
+              const response = await fetch('https://project.vrsevilla.is215.upou.io:5000/api/upload', { 
                 method: 'POST',
                 body: formData,
               });
