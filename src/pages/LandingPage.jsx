@@ -51,7 +51,7 @@ export default function LandingPage() {
 
               try {
                 const response = await fetch(
-                  "https://project.vrsevilla.is215.upou.io:5000/api/upload",
+                  "https://project.vrsevilla.is215.upou.io/api/upload",
                   {
                     method: "POST",
                     body: formData,
