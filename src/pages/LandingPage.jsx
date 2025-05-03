@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import axios from "axios";
 
 export default function LandingPage() {
   const [file, setFile] = useState(null);
@@ -37,28 +38,59 @@ export default function LandingPage() {
   };
 
   useEffect(() => {
-    if (isLoading && isConsentChecked) { // Only proceed if consent is checked
+    if (isLoading && isConsentChecked) {
       const interval = setInterval(() => {
         setProgress((prevProgress) => {
           if (prevProgress >= 100) {
             clearInterval(interval);
-            setTimeout(() => {
-              setIsLoading(false);
-              setProgress(0);
-              navigate("/article-page", {
-                state: {
-                  imageUrl: URL.createObjectURL(file),
-                  fromUpload: true,
-                },
-              });
-            }, 500);
+  
+            // Upload the image here
+            const uploadImage = async () => {
+              const formData = new FormData();
+              formData.append('file', file);
+  
+              try {
+                const response = await fetch('https://project.vrsevilla.is215.upou.io:5000/api/upload', { 
+                  method: 'POST',
+                  body: formData,
+                });
+  
+                if (!response.ok) {
+                  throw new Error('Upload failed');
+                }
+  
+                const result = await response.json();
+                console.log('Upload result:', result);
+  
+                // After successful upload, navigate
+                setTimeout(() => {
+                  setIsLoading(false);
+                  setProgress(0);
+                  navigate("/article-page", {
+                    state: {
+                      imageUrl: URL.createObjectURL(file),
+                      fromUpload: true,
+                    },
+                  });
+                }, 500);
+              } catch (error) {
+                console.error('Error uploading image:', error);
+                setIsLoading(false);
+              }
+            };
+  
+            uploadImage();
+  
             return 100;
           }
+  
           return prevProgress + 5;
         });
       }, 150);
+  
+      return () => clearInterval(interval);
     }
-  }, [isLoading, navigate, file, isConsentChecked]); // Added isConsentChecked dependency
+  }, [isLoading, navigate, file, isConsentChecked]);
 
   useEffect(() => {
     const handleResize = () => {
