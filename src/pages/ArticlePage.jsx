@@ -16,6 +16,7 @@ export default function ArticlePage() {
   const [progress, setProgress] = useState(0);
   const [isConsentChecked, setIsConsentChecked] = useState(false);
   const [showConsent, setShowConsent] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     if (location.state?.fromUpload) {
@@ -26,6 +27,15 @@ export default function ArticlePage() {
       setIsConsentChecked(false);
     }
   }, [location.state]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleFileChange = (event) => {
     const uploadedFile = event.target.files[0];
@@ -109,18 +119,17 @@ export default function ArticlePage() {
         </div>
       )}
 
-      {/* Article Heading */}
-      <div className="max-w-4xl mx-auto py-12 px-6 text-left">
-        <h1 className="text-6xl font-bold mb-4 mx-auto max-w-2xl">
+      <div className="content-container max-w-3xl sm:max-w-4xl md:max-w-5xl mx-auto py-6 sm:py-8 md:py-10 px-4">
+        <h1 className="text-3xl sm:text-4xl md:text-[55px] font-[700] text-gray-900 mb-2 sm:mb-6 md:mb-8 text-left leading-tight">
           Article or post title
         </h1>
-        <p className="text-xl mb-8 mx-auto max-w-2xl">
+        <p className="text-base sm:text-lg md:text-[18px] text-gray-600 mb-2 sm:mb-2 md:mb-4x text-left mt-2 sm:mt-4 md:mt-6">
           Subheading that sets up context, shares more info about the author, or generally gets people psyched to keep reading
         </p>
       </div>
 
       {/* Article Image */}
-      <div className="relative w-full overflow-hidden mb-10 flex justify-center">
+      <div className="relative w-full overflow-hidden mt-[-25px] mb-10 flex justify-center">
         <img
           src={imageUrl}
           alt="Post visual"
@@ -151,35 +160,33 @@ export default function ArticlePage() {
         <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
 
         <div className="relative z-10 pl-10 p-4 rounded-md">
-          <h1 className="text-[65px] font-[700] tracking-[0.06em] text-gray-100 mb-2 font-[inconsolata]">
+          <h1 className="text-3xl sm:text-4xl md:text-[65px] font-[700] tracking-[0.06em] text-gray-100 mb-4 font-[inconsolata]">
             Let the pixels speak again.
           </h1>
-          <h3 className="text-[30px] font-[400] tracking-[0.05em] text-gray-300 mb-6">
+          <h3 className="text-xl sm:text-2xl md:text-[30px] font-[400] tracking-[0.05em] text-gray-300 mb-8">
             Upload another image to generate a new story.
           </h3>
 
-          {/* Uploader */}
-          <div className="upload-file flex justify-start w-full mb-4">
-            <label
-              className="relative bg-[#113f67cc] text-white rounded-[20px] py-2 px-4 max-w-[44rem] w-full cursor-pointer"
+          <div className="upload-file flex justify-start">
+            <label 
+              className={`relative bg-[#113f67cc] text-white py-2 px-4 w-full sm:max-w-[44rem] cursor-pointer
+                ${windowWidth === 375 
+                  ? 'rounded-lg border border-dashed border-white border-opacity-80 [border-style:dashed] [border-width:1px] [border-spacing:2px]'
+                  : 'rounded-2xl border-2 border-dashed border-white border-opacity-90 [border-style:dashed] [border-width:2px] [border-spacing:4px]'
+                }`}
               style={{
-                background: '#113f67cc',
-                borderRadius: '10px',
                 borderStyle: 'dashed',
-                borderWidth: '1px',
+                borderWidth: windowWidth === 375 ? '1px' : '2px',
                 borderColor: 'white',
-                backgroundClip: 'padding-box',
-                borderImageSource:
-                  'url("data:image/svg+xml,%3csvg width=\'100%25\' height=\'100%25\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3crect width=\'100%25\' height=\'100%25\' rx=\'20\' ry=\'20\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-dasharray=\'20%2c 14\' stroke-linecap=\'round\'/%3e%3c/svg%3e")',
-                borderImageSlice: 1,
-                borderImageRepeat: 'round',
-                minHeight: 'calc(100% - 14px)',
+                backgroundClip: 'padding-box'
               }}
             >
-              <p className="text-[30px] font-medium mb-0.5 font-[100] tracking-[0.06em]">
+              <p className="text-xl sm:text-2xl md:text-[30px] font-medium mb-0.5 font-[100] tracking-[0.06em] text-left">
                 Drop your image here or click to upload.
               </p>
-              <p className="text-base">Format: jpg, jpeg, png & Max file size: 10 MB</p>
+              <p className="text-sm sm:text-base text-left mt-1">
+                Format: jpg, jpeg, png & Max file size: 10 MB
+              </p>
 
               <input
                 type="file"
