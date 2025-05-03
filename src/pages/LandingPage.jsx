@@ -41,30 +41,30 @@ export default function LandingPage() {
       const uploadImage = async () => {
         const formData = new FormData();
         formData.append("image", file);
-  
+
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "https://project.vrsevilla.is215.upou.io/api/upload");
-  
+
         let uploadComplete = false;
-  
+
         xhr.upload.onprogress = (event) => {
           if (event.lengthComputable) {
             const percentComplete = (event.loaded / event.total) * 100;
             setProgress(Math.min(Math.round(percentComplete), 95)); // Cap at 95% for upload
           }
         };
-  
+
         xhr.onload = () => {
           if (xhr.status >= 200 && xhr.status < 300) {
             const result = JSON.parse(xhr.responseText);
             uploadComplete = true;
-  
+
             // Animate progress from 95 to 100 while "processing"
             let fakeProgress = 95;
             const processingInterval = setInterval(() => {
               fakeProgress += 1;
               setProgress(fakeProgress);
-  
+
               if (fakeProgress >= 100) {
                 clearInterval(processingInterval);
                 setTimeout(() => {
@@ -85,19 +85,19 @@ export default function LandingPage() {
             console.error("Upload failed:", xhr.responseText);
           }
         };
-  
+
         xhr.onerror = () => {
           setIsLoading(false);
           console.error("Upload error");
         };
-  
+
         xhr.send(formData);
       };
-  
+
       uploadImage();
     }
   }, [isLoading, isConsentChecked, file, navigate]);
-  
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -139,9 +139,10 @@ export default function LandingPage() {
             />
             <div className="bg-white rounded-full h-4 w-full mb-4 overflow-hidden shadow-lg">
               <div
-                className="bg-blue-500 h-4 rounded-full transition-all duration-300 ease-in-out"
-                style={{ width: `${progress}%` }}
+                className="h-4 rounded-full transition-all duration-300 ease-in-out"
+                style={{ backgroundColor: '#274764', width: `${progress}%` }}
               ></div>
+
             </div>
             <p className="text-gray-800 text-xl font-semibold text-center animate-pulse">
               {getProgressText()}
@@ -173,10 +174,9 @@ export default function LandingPage() {
           <div className="upload-file flex justify-start w-full mb-4 sm:mb-6 md:mb-8 mt-[18px]">
             <label
               className={`relative bg-[#113f67cc] text-white py-2 px-4 w-full sm:max-w-[44rem] cursor-pointer
-                ${
-                  windowWidth === 375
-                    ? "rounded-lg border border-dashed border-white border-opacity-80 [border-style:dashed] [border-width:1px] [border-spacing:2px]"
-                    : "rounded-2xl border-2 border-dashed border-white border-opacity-90 [border-style:dashed] [border-width:2px] [border-spacing:4px]"
+                ${windowWidth === 375
+                  ? "rounded-lg border border-dashed border-white border-opacity-80 [border-style:dashed] [border-width:1px] [border-spacing:2px]"
+                  : "rounded-2xl border-2 border-dashed border-white border-opacity-90 [border-style:dashed] [border-width:2px] [border-spacing:4px]"
                 }`}
               style={{
                 borderStyle: "dashed",
@@ -185,7 +185,7 @@ export default function LandingPage() {
                 backgroundClip: "padding-box",
               }}
             >
-              <p className="text-xl sm:text-2xl md:text-[30px] font-medium mb-0.5 font-[100] tracking-[0.06em] text-left">
+              <p className="text-xl sm:text-2xl md:text-[30px] font-medium mb-0.5 font-[100] tracking-[0.06em] text-left mt-3">
                 Drop your image here or click to upload.
               </p>
               <p className="text-sm sm:text-base text-left mt-1">
@@ -212,15 +212,11 @@ export default function LandingPage() {
                 className="mt-1"
               />
               <span>
-                I hereby consent to the collection, processing, and temporary
-                storage of the image I upload. I understand that the image will
-                be used solely for the purpose of generating a personalized
-                article using AI technology. The uploaded file will not be
-                shared with third parties and will be automatically deleted
-                after processing is complete. I acknowledge that no personally
-                identifiable information (PII) will be extracted or stored from
-                the image, and I retain full rights and ownership over the
-                original content.
+                I hereby consent to the collection, processing, and storage of the image I upload.
+                I understand that the image will be used solely for the purpose of generating a personalized article using AI technology.
+                The uploaded file will not be shared with third parties.
+                I acknowledge that no personally identifiable information (PII) will be extracted or stored from the image,
+                and I retain full rights and ownership over the original content.
               </span>
             </label>
           )}
@@ -229,7 +225,7 @@ export default function LandingPage() {
           {file && isConsentChecked && !isLoading && (
             <button
               onClick={handleStartLoading}
-              className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-lg font-medium flex items-center justify-center gap-3 max-w-xs"
+              className="mt-4 bg-[#274764] hover:bg-[#524439] text-white px-4 py-2 rounded-md text-lg font-medium flex items-center justify-center gap-3 max-w-xs"
             >
               Start Processing Image
             </button>
