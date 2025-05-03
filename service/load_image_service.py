@@ -60,7 +60,11 @@ def get_analysis_json(sanitized_filename):
 
 def load_image_to_s3(image_file_path):
     if not is_valid_image(image_file_path):
-        return None
+        return {
+            "filename": os.path.basename(image_file_path),
+            "message": "Upload failed",
+            "error": "Invalid image format or size."
+        }
 
     try:
         original_filename = os.path.basename(image_file_path)
