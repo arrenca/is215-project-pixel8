@@ -10,12 +10,14 @@
 - Capability to download the generated article as a PDF file.
 - Seamless uploading of new image after a news article has been generated without the need to return to home page.
 - Displays an interactive loading bar while the news article generation is in progress.
+- Implemented data privacy consent to ensure users are informed and assured that their data and uploaded images are handled securely and confidentially.
 
 ### Technical Features
 - Utilized both Amazon Rekognition's `detect_labels` and `recognize_celebrities` functions.
 - Implemented a reverse proxy to route service endpoint calls through a central gateway enhancing security, simplifying endpoint management, enabling load balancing, and providing better control over request handling and logging.
 - Equipped with automatic redirection to HTTPS enforcing secure access to the server.
-- Provisioned a personal OpenAI account for the news article generation
+- Provisioned a personal OpenAI account for the news article generation.
+- A cURL debugger aiding in troubleshooting the backend server. `curl -k https://project.vrsevilla.is215.upou.io/api/ping`
 
 
 ## AWS Configuration and properties
