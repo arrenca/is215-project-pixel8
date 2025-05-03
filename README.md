@@ -21,10 +21,10 @@
 
 
 ## AWS Configuration and properties
-- EC2 Instance: "IS215-GROUPB-PIXEL8"
+- EC2 Instance: "IS215-Project"
 - Elastic Ip Tag: "IS215-PROJECT-GROUPB-PIXEL8-EIP"
 - EC2 IAM role set to "EMR_EC2_DefaultRole"
-- Elastic Ip: 107.21.213.143
+- Elastic IP: 107.21.213.143
 - EC2 installed packages: "python, nodejs"
 - S3 Bucket: "is215-groupb-pixel8-s3"
 - Lambda function: "generateArticleFromS3Image"
