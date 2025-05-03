@@ -1,5 +1,7 @@
 ![Pixel8 by IS215 Group B](/public/images/logo.png)
 <p align="center">Automatic Generation of Articles using Amazon Rekognition and OpenAI.</p>
+<p align="center">https://project.vrsevilla.is215.upou.io/</p>
+
 
 ## Features
 ### Product features
