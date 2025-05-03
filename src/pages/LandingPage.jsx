@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import axios from "axios";
 
 export default function LandingPage() {
   const [file, setFile] = useState(null);
@@ -10,6 +9,7 @@ export default function LandingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isConsentChecked, setIsConsentChecked] = useState(false); // State for consent checkbox
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const navigate = useNavigate();
 
@@ -36,60 +36,37 @@ export default function LandingPage() {
     }
   };
 
-useEffect(() => {
-  if (isLoading && isConsentChecked) {
-    const interval = setInterval(() => {
-      setProgress((prevProgress) => {
-        if (prevProgress >= 100) {
-          clearInterval(interval);
-
-          // Upload the image here
-          const uploadImage = async () => {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            try {
-              const response = await fetch('https://project.vrsevilla.is215.upou.io:5000/api/upload', { 
-                method: 'POST',
-                body: formData,
-              });
-
-              if (!response.ok) {
-                throw new Error('Upload failed');
-              }
-
-              const result = await response.json();
-              console.log('Upload result:', result);
-
-              // After successful upload, navigate
-              setTimeout(() => {
-                setIsLoading(false);
-                setProgress(0);
-                navigate("/article-page", {
-                  state: {
-                    imageUrl: URL.createObjectURL(file),
-                    fromUpload: true,
-                  },
-                });
-              }, 500);
-            } catch (error) {
-              console.error('Error uploading image:', error);
+  useEffect(() => {
+    if (isLoading && isConsentChecked) { // Only proceed if consent is checked
+      const interval = setInterval(() => {
+        setProgress((prevProgress) => {
+          if (prevProgress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
               setIsLoading(false);
-            }
-          };
+              setProgress(0);
+              navigate("/article-page", {
+                state: {
+                  imageUrl: URL.createObjectURL(file),
+                  fromUpload: true,
+                },
+              });
+            }, 500);
+            return 100;
+          }
+          return prevProgress + 5;
+        });
+      }, 150);
+    }
+  }, [isLoading, navigate, file, isConsentChecked]); // Added isConsentChecked dependency
 
-          uploadImage();
-
-          return 100;
-        }
-
-        return prevProgress + 5;
-      });
-    }, 150);
-
-    return () => clearInterval(interval);
-  }
-}, [isLoading, navigate, file, isConsentChecked]);
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const getProgressText = () => {
     if (progress < 25) return "Crafting your article...";
@@ -140,39 +117,39 @@ useEffect(() => {
       >
         <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
 
-        <div className="relative z-10 ml-16 pl-6 p-4 rounded-md h-full flex flex-col justify-between">
-          <div className="mt-[50px]">
-            <h1 className="text-[70px] font-[600] leading-[100%] tracking-[0.02em] text-white mb-4 font-inconsolata [text-shadow:_2px_2px_6px_rgba(0,0,0,0.4)]">
+        <div className="relative z-10 ml-4 sm:ml-8 md:ml-16 pl-2 sm:pl-4 md:pl-6 p-4 rounded-md h-full flex flex-col justify-between">
+              <div className="mt-[35px] sm:mt-[45px] md:mt-[65px] text-left">
+            <h1 className="text-4xl sm:text-5xl md:text-[70px] font-[600] leading-[100%] tracking-[0.02em] text-white mb-4 font-inconsolata [text-shadow:_2px_2px_6px_rgba(0,0,0,0.4)]">
               Unlock the story in every pixel.
             </h1>
-            <p className="text-3xl text-white mb-0.5 font-thin tracking-[0.05em]">
+            <p className="text-3xl text-white mb-1 font-thin tracking-[0.065em]">
               Upload a photo and let AI uncover the story behind it — one pixel at a time.
             </p>
-            <p className="text-3xl text-white mb-20 font-thin tracking-[0.05em]">
+            <p className="text-xl sm:text-xl md:text-2xl text-white mb-12 sm:mb-18 md:mb-22 font-thin tracking-[0.07em]">
               Drop your image here or click to upload.
             </p>
           </div>
 
-          <div className="upload-file flex justify-start w-full mb-8">
+          <div className="upload-file flex justify-start w-full mb-4 sm:mb-6 md:mb-8 mt-[18px]">
             <label 
-              className="relative bg-[#113f67cc] text-white rounded-[20px] py-2 px-4 max-w-[44rem] w-full cursor-pointer" 
-              style={{ 
-                background: '#113f67cc',
-                borderRadius: '10px',
+              className={`relative bg-[#113f67cc] text-white py-2 px-4 w-full sm:max-w-[44rem] cursor-pointer
+                ${windowWidth === 375 
+                  ? 'rounded-lg border border-dashed border-white border-opacity-80 [border-style:dashed] [border-width:1px] [border-spacing:2px]'
+                  : 'rounded-2xl border-2 border-dashed border-white border-opacity-90 [border-style:dashed] [border-width:2px] [border-spacing:4px]'
+                }`}
+              style={{
                 borderStyle: 'dashed',
-                borderWidth: '1px',
+                borderWidth: windowWidth === 375 ? '1px' : '2px',
                 borderColor: 'white',
-                backgroundClip: 'padding-box',
-                borderImageSource: 'url("data:image/svg+xml,%3csvg width=\'100%25\' height=\'100%25\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3crect width=\'100%25\' height=\'100%25\' rx=\'20\' ry=\'20\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-dasharray=\'20%2c 14\' stroke-linecap=\'round\'/%3e%3c/svg%3e")',
-                borderImageSlice: 1,
-                borderImageRepeat: 'round',
-                minHeight: 'calc(100% - 14px)'
+                backgroundClip: 'padding-box'
               }}
             >
-              <p className="text-[30px] font-medium mb-0.5 font-[100] tracking-[0.06em]">
+              <p className="text-xl sm:text-2xl md:text-[30px] font-medium mb-0.5 font-[100] tracking-[0.06em] text-left">
                 Drop your image here or click to upload.
               </p>
-              <p className="text-base">Format: jpg, jpeg, png & Max file size: 10 MB</p>
+              <p className="text-sm sm:text-base text-left mt-1"> 
+                Format: jpg, jpeg, png & Max file size: 10 MB
+              </p>
 
               <input
                 type="file"
