@@ -16,7 +16,7 @@ Automatic Generation of Articles using Amazon Rekognition and OpenAI.
 - Provisioned a personal OpenAI account for the news article generation
 
 
-### AWS Configuration and properties
+## AWS Configuration and properties
 - EC2 Instance: "IS215-GROUPB-PIXEL8"
 - Elastic Ip Tag: "IS215-PROJECT-GROUPB-PIXEL8-EIP"
 - EC2 IAM role set to "EMR_EC2_DefaultRole"
