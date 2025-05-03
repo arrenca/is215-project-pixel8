@@ -189,7 +189,7 @@ export default function LandingPage() {
                 Drop your image here or click to upload.
               </p>
               <p className="text-sm sm:text-base text-left mt-1">
-                Format: jpg, jpeg, png & Max file size: 10 MB
+                Format: jpg, jpeg, png & Max file size: 5 MB
               </p>
 
               <input
