@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation, 
-  // useNavigate 
-} 
-  from "react-router-dom";
+import { useLocation, useNavigate} from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,8 +8,7 @@ import html2pdf from "html2pdf.js"
 
 export default function ArticlePage() {
   const location = useLocation();
-  // const navigate = useNavigate();
-
+  const navigate = useNavigate();
   const data = location.state
 
   const [file, setFile] = useState(null);
@@ -72,26 +68,68 @@ export default function ArticlePage() {
     setIsConsentChecked(event.target.checked);
   };
 
-  const handleStartLoading = () => {
-    if (file && isConsentChecked) {
-      setIsLoading(true);
-      const interval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(interval);
+  const uploadImage = async () => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://project.vrsevilla.is215.upou.io/api/upload");
+
+    let uploadComplete = false;
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percentComplete = (event.loaded / event.total) * 100;
+        setProgress(Math.min(Math.round(percentComplete), 95)); // Cap at 95% for upload
+      }
+    };
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        const result = JSON.parse(xhr.responseText);
+        uploadComplete = true;
+
+        // Animate progress from 95 to 100 while "processing"
+        let fakeProgress = 95;
+        const processingInterval = setInterval(() => {
+          fakeProgress += 1;
+          setProgress(fakeProgress);
+
+          if (fakeProgress >= 100) {
+            clearInterval(processingInterval);
             setTimeout(() => {
               setIsLoading(false);
               setProgress(0);
-              setImageUrl(URL.createObjectURL(file));
-              setFile(null);
-              setIsConsentChecked(false);
-              setShowConsent(false);
+              navigate("/article-page", {
+                state: {
+                  imageUrl: URL.createObjectURL(file),
+                  fromUpload: true,
+                  ...result?.analysis,
+                },
+              });
             }, 500);
-            return 100;
           }
-          return prev + 5;
-        });
-      }, 150);
+        }, 50);
+      } else {
+        setIsLoading(false);
+        console.error("Upload failed:", xhr.responseText);
+      }
+    };
+
+    xhr.onerror = () => {
+      setIsLoading(false);
+      console.error("Upload error");
+    };
+
+    xhr.send(formData);
+  };
+
+  console.log(data)
+
+  const handleStartLoading = () => {
+    if (file && isConsentChecked) {
+      setIsLoading(true);
+      uploadImage()
     }
   };
 
@@ -115,6 +153,10 @@ export default function ArticlePage() {
   
     html2pdf().from(element).set(opt).save()
   }
+
+  useEffect(() => {
+    setImageUrl(data.imageUrl)
+  }, [data])
 
   return (
     <div className="landing-container bg-white min-h-screen font-inter">
