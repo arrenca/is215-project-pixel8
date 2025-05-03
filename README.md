@@ -1,5 +1,5 @@
-# IS215 Project PIXEL8
-Automatic Generation of Articles using Amazon Rekognition and OpenAI.
+![Pixel8 by IS215 Group B](/public/images/logo.png)
+<p align="center">Automatic Generation of Articles using Amazon Rekognition and OpenAI.</p>
 
 ## Features
 ### Product features
