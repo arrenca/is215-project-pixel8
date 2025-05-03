@@ -42,7 +42,7 @@ export default function ArticlePage() {
   const handleFileChange = (event) => {
     const uploadedFile = event.target.files[0];
     const validFormats = ["image/jpeg", "image/jpg", "image/png"];
-    const maxSize = 10 * 1024 * 1024;
+    const maxSize = 5 * 1024 * 1024;
 
     if (uploadedFile) {
       if (!validFormats.includes(uploadedFile.type)) {
@@ -52,7 +52,7 @@ export default function ArticlePage() {
       }
 
       if (uploadedFile.size > maxSize) {
-        setError("File size exceeds 10 MB. Please upload a smaller file.");
+        setError("File size exceeds 5 MB. Please upload a smaller file.");
         setFile(null);
         return;
       }
