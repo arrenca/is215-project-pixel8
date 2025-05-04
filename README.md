@@ -20,6 +20,14 @@
 - A cURL debugger aiding in troubleshooting the backend server. `curl -k https://project.vrsevilla.is215.upou.io/api/ping`
 
 
+## Demo
+
+
+https://github.com/user-attachments/assets/b644deee-f664-410d-8632-701f79837725
+
+
+
+
 ## AWS Configuration and properties
 - EC2 Instance: "IS215-Project"
 - Elastic Ip Tag: "IS215-PROJECT-GROUPB-PIXEL8-EIP"
